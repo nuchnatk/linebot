@@ -1,0 +1,5 @@
+export LINE_CHANNEL_SECRET=a4768ecdec76bea8c60d26c27a1c1f40
+export LINE_CHANNEL_ACCESS_TOKEN=Qv4eY7y1IeLvw1psLwtJeA/zAPVoZbu0lr3nIl/2/BJXbDG4UvhwfF+4CI2myQHzsZCY9/deUYYM/WJxJwlSuc94Iu4zSkeZcdSYy+5uRUaDk7cjmYQUgVdhp3RpaG1s1rD+nEcJPvK0QfkQAGKLZQdB04t89/1O/w1cDnyilFU=
+export FLASK_APP=app.py
+export FLASK_DEBUG=1
+flask run

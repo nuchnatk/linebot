@@ -13,7 +13,7 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage, ImageMessage, VideoMessage, AudioMessage
+    MessageEvent, TextMessage, TextSendMessage, ImageMessage, VideoMessage, AudioMessage,StickerMessage
 )
 
 import oil_price
@@ -23,9 +23,26 @@ latest_image_path = ""
 
 static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
 
+channel_secret = os.getenv('LINE_CHANNEL_SECRET', None)
+channel_access_token = os.getenv('LINE_CHANNEL_ACCESS_TOKEN', None)
 
-line_bot_api = LineBotApi('C6yfsXHC7V9w4hirs8TLebWIBFVukTMf8akta0E1y86Js6PXYJ5OcIAQIfRF7K+/ANoCEWyiq8AflFKh12A6qNkrKfVrZjSGAIbCszIWX+Mj9BX1jBqF2kENu5y0H96zQckb79g0FEzSllODk/iacgdB04t89/1O/w1cDnyilFU=')
-handler = WebhookHandler('f4ef22d049166efb5c2a57664c10ef8e')
+if channel_secret is None:
+   print('Specify LINE_CHANNEL_SECRET as environment variable.')
+   sys.exit(1)
+if channel_access_token is None:
+   print('Specify LINE_CHANNEL_ACCESS_TOKEN as environment variable.')
+   sys.exit(1)
+
+line_bot_api = LineBotApi(channel_access_token)
+handler = WebhookHandler(channel_secret)
+
+#boringcat
+#line_bot_api = LineBotApi('C6yfsXHC7V9w4hirs8TLebWIBFVukTMf8akta0E1y86Js6PXYJ5OcIAQIfRF7K+/ANoCEWyiq8AflFKh12A6qNkrKfVrZjSGAIbCszIWX+Mj9BX1jBqF2kENu5y0H96zQckb79g0FEzSllODk/iacgdB04t89/1O/w1cDnyilFU=')
+#handler = WebhookHandler('f4ef22d049166efb5c2a57664c10ef8e')
+
+#อุ๋ง
+#line_bot_api = LineBotApi('Qv4eY7y1IeLvw1psLwtJeA/zAPVoZbu0lr3nIl/2/BJXbDG4UvhwfF+4CI2myQHzsZCY9/deUYYM/WJxJwlSuc94Iu4zSkeZcdSYy+5uRUaDk7cjmYQUgVdhp3RpaG1s1rD+nEcJPvK0QfkQAGKLZQdB04t89/1O/w1cDnyilFU=')
+#handler = WebhookHandler('a4768ecdec76bea8c60d26c27a1c1f40')
 
 @app.route("/", methods=['GET'])
 def default_action():
@@ -41,16 +58,27 @@ def callback():
 
     # handle webhook body
     try:
+        print('Body:',body)
         handler.handle(body, signature)
     except InvalidSignatureError:
         abort(400)
 
     return 'OK'
 
+@handler.add(MessageEvent, message=StickerMessage)
+def handle_sticker_message(event):
+    # Handle webhook verification
+    if event.reply_token == 'ffffffffffffffffffffffffffffffff':
+       return 'OK'
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     global latest_image_path
+
+    # Handle webhook verification
+    if event.reply_token == '00000000000000000000000000000000':
+       return 'OK'
+
 
     if event.message.text == 'ราคาน้ำมัน' :
         l = oil_price.get_prices()
